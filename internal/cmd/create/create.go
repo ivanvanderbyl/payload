@@ -24,6 +24,15 @@ func Create(c *cli.Context) error {
 	bucket := c.String("bucket")
 	filename := fmt.Sprintf("Cloud_SQL_Export_%s_%s_daily.sql", time.Now().Format("20060102"), database)
 
+	bar := progressbar.NewOptions(100,
+		progressbar.OptionSetRenderBlankState(false),
+		progressbar.OptionEnableColorCodes(true),
+		progressbar.OptionSetWriter(ansi.NewAnsiStdout()),
+		progressbar.OptionSetDescription(fmt.Sprintf("[cyan][1/3][reset] Exporting '%s'...", database)),
+	)
+
+	bar.Add(1)
+
 	req := sqladminService.Instances.Export(project, instance, &sqladmin.InstancesExportRequest{
 		ExportContext: &sqladmin.ExportContext{
 			Databases: []string{database},
@@ -33,6 +42,8 @@ func Create(c *cli.Context) error {
 		},
 	})
 
+	bar.Add(2)
+
 	op, err := req.Context(ctx).Do()
 	if err != nil {
 		return err
@@ -40,12 +51,6 @@ func Create(c *cli.Context) error {
 
 	ticker := time.NewTicker(1000 * time.Millisecond)
 	done := make(chan bool)
-	bar := progressbar.NewOptions(100,
-		progressbar.OptionSetRenderBlankState(false),
-		progressbar.OptionEnableColorCodes(true),
-		progressbar.OptionSetWriter(ansi.NewAnsiStdout()),
-		progressbar.OptionSetDescription(fmt.Sprintf("[cyan][1/3][reset] Exporting '%s'...", database)),
-	)
 
 	go func() {
 		for {
