@@ -22,7 +22,7 @@ func Create(c *cli.Context) error {
 	instance := c.String("instance")
 	database := c.String("database")
 	bucket := c.String("bucket")
-	filename := fmt.Sprintf("Cloud_SQL_Export_%s_%s_daily.sql", database, time.Now().Format("2006-01-02"))
+	filename := fmt.Sprintf("Cloud_SQL_Export_%s_%s_daily.sql", time.Now().Format("20060102"), database)
 
 	req := sqladminService.Instances.Export(project, instance, &sqladmin.InstancesExportRequest{
 		ExportContext: &sqladmin.ExportContext{
