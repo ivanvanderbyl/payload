@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/k0kubun/go-ansi"
 	"github.com/schollz/progressbar/v3"
 	"github.com/urfave/cli/v2"
 	"google.golang.org/api/sqladmin/v1"
@@ -39,11 +40,12 @@ func Create(c *cli.Context) error {
 
 	ticker := time.NewTicker(1000 * time.Millisecond)
 	done := make(chan bool)
-	bar := progressbar.Default(100)
-	// for i := 0; i < 100; i++ {
-	// 	bar.Add(1)
-	// 	time.Sleep(40 * time.Millisecond)
-	// }
+	bar := progressbar.NewOptions(100,
+		progressbar.OptionSetRenderBlankState(false),
+		progressbar.OptionEnableColorCodes(true),
+		progressbar.OptionSetWriter(ansi.NewAnsiStdout()),
+		progressbar.OptionSetDescription(fmt.Sprintf("[cyan][1/3][reset] Exporting '%s'...", database)),
+	)
 
 	go func() {
 		for {
@@ -51,16 +53,16 @@ func Create(c *cli.Context) error {
 			case <-done:
 				ticker.Stop()
 				return
-			case t := <-ticker.C:
-				fmt.Println("Tick at", t)
+			case <-ticker.C:
 				bar.Add(1)
 				op, err = sqladminService.Operations.Get(project, op.Name).Context(ctx).Do()
 				if err != nil {
 					log.Println(err)
 					done <- true
 				}
-				log.Println(op.Status)
 				if op.Status == "DONE" {
+					bar.Set(100)
+					bar.Finish()
 					done <- true
 				}
 			}
@@ -68,8 +70,6 @@ func Create(c *cli.Context) error {
 	}()
 
 	<-done
-
-	log.Println("Done")
 
 	return nil
 }
