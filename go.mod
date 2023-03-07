@@ -22,12 +22,12 @@ require (
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	go.opencensus.io v0.23.0 // indirect
-	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
-	golang.org/x/net v0.0.0-20210503060351-7fd8e65b6420 // indirect
+	golang.org/x/crypto v0.1.0 // indirect
+	golang.org/x/net v0.1.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20211005180243-6b3c2da341f1 // indirect
-	golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6 // indirect
-	golang.org/x/term v0.0.0-20210615171337-6886f2dfbf5b // indirect
-	golang.org/x/text v0.3.6 // indirect
+	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/term v0.1.0 // indirect
+	golang.org/x/text v0.4.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20211013025323-ce878158c4d4 // indirect
 	google.golang.org/grpc v1.41.0 // indirect
